@@ -167,7 +167,7 @@ const Courses = () => {
               <td>
                 <img
                   src={course.imageUrl ? `${config.baseURL}/${course.imageUrl.replace('uploads\\', '')}` : ""}
-                  alt="React Image"
+                  alt="Image"
                   style={{ maxWidth: "100px", maxHeight: "100px" }}
                 />
               </td>
