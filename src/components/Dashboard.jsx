@@ -1,23 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import config from "../confing";
+
 
 const Dashboard = () => {
   const [instructorsCount, setInstructorsCount] = useState(0);
   const [coursesCount, setCoursesCount] = useState(0);
   const [lecturesCount, setLecturesCount] = useState(0);
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (localStorage.getItem("role") === "Instructor") {
+      navigate("/instructordashboard");
+    }
+  }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const instructorsResponse = await axios.get('http://localhost:4000/api/instructors');
-        const coursesResponse = await axios.get('http://localhost:4000/api/courses');
-        const lecturesResponse = await axios.get('http://localhost:4000/api/lectures');
+        const instructorsResponse = await axios.get(
+          `${config.baseURL}/api/instructors`
+        );
+        const coursesResponse = await axios.get(
+          `${config.baseURL}/api/courses`
+        );
+        const lecturesResponse = await axios.get(
+          `${config.baseURL}/api/lectures`
+        );
         setInstructorsCount(instructorsResponse.data.length);
         setCoursesCount(coursesResponse.data.length);
         setLecturesCount(lecturesResponse.data.length);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
@@ -34,7 +50,9 @@ const Dashboard = () => {
             <div className="card-body">
               <h5 className="card-title">{instructorsCount}</h5>
               <p className="card-text">Total number of instructors</p>
-              <Link to="/instructors" className="btn btn-light">View Instructors</Link>
+              <Link to="/instructors" className="btn btn-light">
+                View Instructors
+              </Link>
             </div>
           </div>
         </div>
@@ -44,7 +62,9 @@ const Dashboard = () => {
             <div className="card-body">
               <h5 className="card-title">{coursesCount}</h5>
               <p className="card-text">Total number of courses</p>
-              <Link to="/courses" className="btn btn-light">View Courses</Link>
+              <Link to="/courses" className="btn btn-light">
+                View Courses
+              </Link>
             </div>
           </div>
         </div>
@@ -54,7 +74,9 @@ const Dashboard = () => {
             <div className="card-body">
               <h5 className="card-title">{lecturesCount}</h5>
               <p className="card-text">Total number of lectures</p>
-              <Link to="/lectures" className="btn btn-light">View Lectures</Link>
+              <Link to="/lectures" className="btn btn-light">
+                View Lectures
+              </Link>
             </div>
           </div>
         </div>

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import config from "../confing";
+
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -10,7 +12,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:4000/auth/login', { username, password });
+      const response = await axios.post(`${config.baseURL}/auth/login`, { username, password });
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('role', response.data.role);
       if(response.data.role==="Admin"){
@@ -20,6 +22,7 @@ const Login = () => {
       }
       
     } catch (error) {
+      alert(error.response.data.message);
       console.error('Login error:', error);
     }
   };

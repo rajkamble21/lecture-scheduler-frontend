@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import config from "../confing";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -11,7 +12,7 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:4000/auth/register", { username, password, role });
+      await axios.post(`${config.baseURL}/auth/register`, { username, password, role });
       navigate("/login");
     } catch (error) {
       console.error("Registration error:", error);

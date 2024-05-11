@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import config from "../confing";
+
 
 const Courses = () => {
   const [courses, setCourses] = useState([]);
@@ -13,7 +15,7 @@ const Courses = () => {
   // Fetch all courses function
   const fetchCourses = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/courses");
+      const response = await axios.get(`${config.baseURL}/api/courses`);
       setCourses(response.data);
     } catch (error) {
       console.error("Error fetching courses:", error);
@@ -35,14 +37,20 @@ const Courses = () => {
       const courseData = { name, level, description, imageUrl };
       if (editMode) {
         await axios.put(
-          `http://localhost:4000/api/courses/${editCourseId}`,
-          courseData
+          `${config.baseURL}/api/courses/${editCourseId}`,
+          courseData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
         );
       } else {
-        await axios.post(
-          "http://localhost:4000/api/courses",
-          courseData
-        );
+        await axios.post(`${config.baseURL}/api/courses`, courseData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
       }
       setEditMode(false);
       setName("");
@@ -52,17 +60,14 @@ const Courses = () => {
       setEditCourseId(null);
       fetchCourses(); // Refresh course list
     } catch (error) {
-      console.error(
-        `Error ${editMode ? "updating" : "adding"} course:`,
-        error
-      );
+      console.error(`Error ${editMode ? "updating" : "adding"} course:`, error);
     }
   };
 
   // Delete a course
   const deleteCourse = async (id) => {
     try {
-      await axios.delete(`http://localhost:4000/api/courses/${id}`);
+      await axios.delete(`${config.baseURL}/api/courses/${id}`);
       fetchCourses(); // Refresh course list
     } catch (error) {
       console.error("Error deleting course:", error);
@@ -115,11 +120,9 @@ const Courses = () => {
           </div>
           <div className="mb-3">
             <input
-              type="text"
-              className="form-control"
-              placeholder="Image URL"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
+              type="file"
+              className="form-control-file"
+              onChange={(e) => setImageUrl(e.target.files[0])}
             />
           </div>
           <div className="col-auto">
@@ -161,7 +164,13 @@ const Courses = () => {
               <td>{course.name}</td>
               <td>{course.level}</td>
               <td>{course.description}</td>
-              <td>{course.imageUrl}</td>
+              <td>
+                <img
+                  src={course.imageUrl ? `${config.baseURL}/${course.imageUrl.replace('uploads\\', '')}` : ""}
+                  alt="React Image"
+                  style={{ maxWidth: "100px", maxHeight: "100px" }}
+                />
+              </td>
               <td>
                 <button
                   type="button"

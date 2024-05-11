@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import config from "../confing";
+
 
 const Instructors = () => {
   const [instructors, setInstructors] = useState([]);
@@ -13,7 +15,7 @@ const Instructors = () => {
   // Fetch all instructors function
   const fetchInstructors = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/instructors");
+      const response = await axios.get(`${config.baseURL}/api/instructors`);
       setInstructors(response.data);
     } catch (error) {
       console.error("Error fetching instructors:", error);
@@ -35,12 +37,12 @@ const Instructors = () => {
       const instructorData = { username, password, name, email };
       if (editMode) {
         await axios.put(
-          `http://localhost:4000/api/instructors/${editInstructorId}`,
+          `${config.baseURL}/api/instructors/${editInstructorId}`,
           instructorData
         );
       } else {
         await axios.post(
-          "http://localhost:4000/api/instructors",
+          `${config.baseURL}/api/instructors`,
           instructorData
         );
       }
@@ -62,7 +64,7 @@ const Instructors = () => {
   // Delete an instructor
   const deleteInstructor = async (id) => {
     try {
-      await axios.delete(`http://localhost:4000/api/instructors/${id}`);
+      await axios.delete(`${config.baseURL}/api/instructors/${id}`);
       fetchInstructors(); // Refresh instructor list
     } catch (error) {
       console.error("Error deleting instructor:", error);

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import config from "../confing";
 
 const Lectures = () => {
   const [lectures, setLectures] = useState([]);
@@ -15,7 +16,7 @@ const Lectures = () => {
   // Fetch all lectures function
   const fetchLectures = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/lectures");
+      const response = await axios.get(`${config.baseURL}/api/lectures`);
       setLectures(response.data);
     } catch (error) {
       console.error("Error fetching lectures:", error);
@@ -25,7 +26,7 @@ const Lectures = () => {
   // Fetch all courses function
   const fetchCourses = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/courses");
+      const response = await axios.get(`${config.baseURL}/api/courses`);
       setCourses(response.data);
     } catch (error) {
       console.error("Error fetching courses:", error);
@@ -35,7 +36,7 @@ const Lectures = () => {
   // Fetch all instructors function
   const fetchInstructors = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/instructors");
+      const response = await axios.get(`${config.baseURL}/api/instructors`);
       setInstructors(response.data);
     } catch (error) {
       console.error("Error fetching instructors:", error);
@@ -59,11 +60,11 @@ const Lectures = () => {
       const lectureData = { courseId, instructorId, date, time };
       if (editMode) {
         await axios.put(
-          `http://localhost:4000/api/lectures/${editLectureId}`,
+          `${config.baseURL}/api/lectures/${editLectureId}`,
           lectureData
         );
       } else {
-        await axios.post("http://localhost:4000/api/lectures", lectureData);
+        await axios.post(`${config.baseURL}/api/lectures`, lectureData);
       }
       setCourseId("");
       setInstructorId("");
@@ -83,7 +84,7 @@ const Lectures = () => {
     try {
       const confirmDelete = window.confirm("Are you sure you want to delete this lecture?");
       if (confirmDelete) {
-        await axios.delete(`http://localhost:4000/api/lectures/${id}`);
+        await axios.delete(`${config.baseURL}/api/lectures/${id}`);
         fetchLectures(); // Refresh lecture list
       }
     } catch (error) {
@@ -200,7 +201,7 @@ const Lectures = () => {
                   )?.name
                 }
               </td>
-              <td>{new Date(lecture.date).toLocaleDateString()}</td>
+              <td>{new Date(lecture.date).toLocaleDateString('en-GB')}</td>
               <td>{lecture.time}</td>
               <td>
                 <button
